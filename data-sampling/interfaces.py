@@ -6,6 +6,7 @@ import pandas as pd
 __all__ = [
     'BaseDataManager',
     'BaseTextProcessor',
+    'BaseStratifier',
 ]
 
 
@@ -29,4 +30,18 @@ class BaseDataManager(ABC):
 class BaseTextProcessor(ABC):
     @abstractmethod
     def process_text(self, text: str) -> str:
+        pass
+
+
+class BaseStratifier(ABC):
+    @abstractmethod
+    def build_stratum_key(
+        self,
+        dataset: pd.DataFrame,
+        stratify_columns: list[str]
+    ) -> pd.DataFrame:
+        pass
+
+    @abstractmethod
+    def split(self, dataset: pd.DataFrame) -> list[tuple[str, pd.DataFrame]]:
         pass
