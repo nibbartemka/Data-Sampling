@@ -12,10 +12,7 @@ from .interfaces import (
     BaseTextProcessor,
 )
 
-
-__all__ = [
-    'Pipeline',
-]
+__all__ = ['Pipeline']
 
 
 class Pipeline:
@@ -45,21 +42,24 @@ class Pipeline:
             settings.COLS_MAP.REQUIRED_COLS,
         )
 
-        df = self.text_processor.preprocess(
-            df=df,
-            text_column=settings.COLS_MAP.TEXT_COL,
-            min_text_len=settings.TEXT_PROC.MIN_TEXT_LENGTH,
-        )
+        text_col = settings.COLS_MAP.TEXT_COL
+        min_len = settings.TEXT_PROC.MIN_TEXT_LENGTH
+
+        # Нормализация текста (TextNormalizer.process_text уже обрабатывает NaN и приводит к str)
+        df[text_col] = df[text_col].map(self.text_processor.process_text)
+
+        # Фильтрация по длине и создание безопасной копии для дальнейших модификаций
+        df = df[df[text_col].str.len() >= min_len].copy()
+        df = df.reset_index(drop=True)
 
         df = self.stratifier.build_stratum_key(
-            df=df,
+            dataset=df,
             stratify_columns=settings.COLS_MAP.STRATIFY_COLS,
         )
 
         parts = []
-
         for stratum_key, df_stratum in self.stratifier.split(df):
-            texts = df_stratum[settings.COLS_MAP.TEXT_COL].tolist()
+            texts = df_stratum[text_col].tolist()
             embeddings = self.embedder.encode(texts)
 
             cluster_labels = self.clusterer.cluster(
@@ -68,7 +68,7 @@ class Pipeline:
             )
 
             semantic_records = self.semantic_selector.select(
-                df_stratum=df_stratum,
+                dataset_stratum=df_stratum,
                 embeddings=embeddings,
                 cluster_labels=cluster_labels,
                 id_column=settings.COLS_MAP.ID_COL,
@@ -77,8 +77,8 @@ class Pipeline:
             )
 
             rule_records = self.rule_enricher.enrich(
-                df_stratum=df_stratum,
-                text_column=settings.COLS_MAP.TEXT_COL,
+                dataset_stratum=df_stratum,
+                text_column=text_col,
                 id_column=settings.COLS_MAP.ID_COL,
                 max_per_pattern=settings.STRATIFY.TARGETED_MAX_PER_PATTERN_PER_STRATUM,
             )
@@ -104,9 +104,7 @@ class Pipeline:
 
         result = pd.concat(parts, ignore_index=True)
 
-        # Ограничение по группам.
-        # По текущей логике используем первую колонку стратификации как верхнеуровневую группу,
-        # например ServiceName.
+        # Верхнеуровневая группа берётся из первой колонки стратификации (обычно ServiceName)
         group_col = settings.COLS_MAP.STRATIFY_COLS[0]
 
         result = self.sample_merger.limit_per_group(
@@ -116,8 +114,8 @@ class Pipeline:
         )
 
         result = self.sample_merger.deduplicate(
-            df=result,
-            text_column=settings.COLS_MAP.TEXT_COL,
+            dataset=result,
+            text_column=text_col,
             similarity_threshold=settings.EMBEDDING.DEDUP_SIMILARITY_THRESHOLD,
             embedder=self.embedder,
         )
@@ -138,7 +136,7 @@ class Pipeline:
         result = self.build_sample()
         if not result.empty:
             self.data_manager.save_dataset(
-                result,
                 settings.LOCAL_REP.OUTPUT_FILE_PATH,
+                result,
             )
         return result

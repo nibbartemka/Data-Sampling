@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.cluster import KMeans
 
-from interfaces import BaseClusterer
+from .interfaces import BaseClusterer
 
 
 __all__ = [
