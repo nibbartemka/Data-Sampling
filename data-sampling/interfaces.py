@@ -4,7 +4,8 @@ import pandas as pd
 
 
 __all__ = [
-    'BaseDataManager'
+    'BaseDataManager',
+    'BaseTextProcessor',
 ]
 
 
@@ -22,4 +23,10 @@ class BaseDataManager(ABC):
         path: str,
         dataset: pd.DataFrame,
     ) -> None:
+        pass
+
+
+class BaseTextProcessor(ABC):
+    @abstractmethod
+    def process_text(self, text: str) -> str:
         pass
