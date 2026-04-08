@@ -3,6 +3,11 @@ import pandas as pd
 from .interfaces import BaseStratifier
 
 
+__all__ = [
+    'SimpleStratifier',
+]
+
+
 class SimpleStratifier(BaseStratifier):
     def build_stratum_key(
         self,

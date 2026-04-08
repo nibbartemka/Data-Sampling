@@ -4,6 +4,11 @@ import pandas as pd
 from .interfaces import BaseRuleEnricher
 
 
+__all__ = [
+    'PatternRuleEnricher',
+]
+
+
 class PatternRuleEnricher(BaseRuleEnricher):
     PATTERN_MAP = {
         "negation": re.compile(r"\b(не\b|нет\b|отрицает\b|не выявлено\b|не отмечает\b|отсутствует\b)", re.I),

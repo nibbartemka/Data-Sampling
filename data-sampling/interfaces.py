@@ -16,6 +16,7 @@ __all__ = [
     'BaseClusterer',
     'BaseSemanticSelector',
     'BaseRuleEnricher',
+    'BaseSampleMerger',
 ]
 
 
@@ -95,4 +96,29 @@ class BaseRuleEnricher(ABC):
         id_column: str,
         max_per_pattern: int,
     ) -> dict:
+        pass
+
+
+class BaseSampleMerger(ABC):
+    @abstractmethod
+    def merge_record_dicts(self, *dicts: dict) -> 'pd.DataFrame':
+        pass
+
+    @abstractmethod
+    def limit_per_group(
+        self,
+        dataset: 'pd.DataFrame',
+        *group_cols,
+        max_rows_per_group: int
+    ) -> 'pd.DataFrame':
+        pass
+
+    @abstractmethod
+    def deduplicate(
+        self,
+        dataset: 'pd.DataFrame',
+        text_column: str,
+        similarity_threshold: float,
+        embedder,
+    ) -> 'pd.DataFrame':
         pass

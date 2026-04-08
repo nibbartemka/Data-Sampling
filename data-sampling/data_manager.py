@@ -3,6 +3,11 @@ import pandas as pd
 from .interfaces import BaseDataManager
 
 
+__all__ = [
+    'ExcelDataManager',
+]
+
+
 class ExcelDataManager(BaseDataManager):
     def load_dataset(
         self,

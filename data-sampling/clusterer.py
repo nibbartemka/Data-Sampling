@@ -4,6 +4,11 @@ from sklearn.cluster import KMeans
 from interfaces import BaseClusterer
 
 
+__all__ = [
+    'KMeansClusterer',
+]
+
+
 class KMeansClusterer(BaseClusterer):
     def _choose_cluster_count(self, n_texts: int, default_k: int) -> int:
         if n_texts <= 3:

@@ -4,6 +4,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 from .interfaces import BaseSemanticSelector
 
 
+__all__ = [
+    'SimpleSemanticSelector',
+]
+
+
 class SimpleSemanticSelector(BaseSemanticSelector):
     def select(
         self,
