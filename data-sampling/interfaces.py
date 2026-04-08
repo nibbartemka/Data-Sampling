@@ -1,12 +1,18 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
-import pandas as pd
+
+if TYPE_CHECKING:
+    import pandas as pd
+    import numpy as np
 
 
 __all__ = [
     'BaseDataManager',
     'BaseTextProcessor',
     'BaseStratifier',
+    'BaseEmbedder',
 ]
 
 
@@ -16,13 +22,13 @@ class BaseDataManager(ABC):
         self,
         path: str,
         required_columns: list[str],
-    ) -> pd.DataFrame:
+    ) -> 'pd.DataFrame':
         pass
 
     @abstractmethod
     def save_dataset(
         path: str,
-        dataset: pd.DataFrame,
+        dataset: 'pd.DataFrame',
     ) -> None:
         pass
 
@@ -37,11 +43,17 @@ class BaseStratifier(ABC):
     @abstractmethod
     def build_stratum_key(
         self,
-        dataset: pd.DataFrame,
+        dataset: 'pd.DataFrame',
         stratify_columns: list[str]
-    ) -> pd.DataFrame:
+    ) -> 'pd.DataFrame':
         pass
 
     @abstractmethod
-    def split(self, dataset: pd.DataFrame) -> list[tuple[str, pd.DataFrame]]:
+    def split(self, dataset: 'pd.DataFrame') -> list[tuple[str, 'pd.DataFrame']]:
+        pass
+
+
+class BaseEmbedder(ABC):
+    @abstractmethod
+    def encode(self, texts: list[str]) -> 'np.ndarray':
         pass
