@@ -57,3 +57,13 @@ class BaseEmbedder(ABC):
     @abstractmethod
     def encode(self, texts: list[str]) -> 'np.ndarray':
         pass
+
+
+class BaseClusterer:
+    @abstractmethod
+    def cluster(
+        self,
+        embeddings: 'np.ndarray',
+        default_k: int
+    ) -> 'np.ndarray':
+        pass
