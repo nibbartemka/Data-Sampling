@@ -2,6 +2,11 @@ from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
 
+__all__ = [
+    'settings',
+]
+
+
 class LocalRepositoryConfig(BaseModel):
     INPUT_FILE_PATH: str = "input.xlsx"
     OUTPUT_FILE_PATH: str = "ouput.xlsx"
@@ -63,10 +68,13 @@ class ColumnMappingConfig(BaseModel):
 
 class Settings(BaseSettings):
     LOCAL_REP: LocalRepositoryConfig
-    COLS_MAP: ColumnMappingConfig 
+    COLS_MAP: ColumnMappingConfig
     TEXT_PROC: TextProcessingConfig
     EMBEDDING: EmbeddingConfig
     CLUSTERING: ClusteringConfig
     STRATIFY: StratificationConfig
     RARE_SCORER: RareScorerConfig
     SAMPLING: SamplingLimitsConfig
+
+
+settings = Settings()
