@@ -59,7 +59,7 @@ class BaseEmbedder(ABC):
         pass
 
 
-class BaseClusterer:
+class BaseClusterer(ABC):
     @abstractmethod
     def cluster(
         self,
