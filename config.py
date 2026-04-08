@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
 
 
@@ -67,14 +67,14 @@ class ColumnMappingConfig(BaseModel):
 
 
 class Settings(BaseSettings):
-    LOCAL_REP: LocalRepositoryConfig
-    COLS_MAP: ColumnMappingConfig
-    TEXT_PROC: TextProcessingConfig
-    EMBEDDING: EmbeddingConfig
-    CLUSTERING: ClusteringConfig
-    STRATIFY: StratificationConfig
-    RARE_SCORER: RareScorerConfig
-    SAMPLING: SamplingLimitsConfig
+    LOCAL_REP: LocalRepositoryConfig = Field(default_factory=LocalRepositoryConfig)
+    COLS_MAP: ColumnMappingConfig = Field(default_factory=ColumnMappingConfig)
+    TEXT_PROC: TextProcessingConfig = Field(default_factory=TextProcessingConfig)
+    EMBEDDING: EmbeddingConfig = Field(default_factory=EmbeddingConfig)
+    CLUSTERING: ClusteringConfig = Field(default_factory=ClusteringConfig)
+    STRATIFY: StratificationConfig = Field(default_factory=StratificationConfig)
+    RARE_SCORER: RareScorerConfig = Field(default_factory=RareScorerConfig)
+    SAMPLING: SamplingLimitsConfig = Field(default_factory=SamplingLimitsConfig)
 
 
 settings = Settings()
