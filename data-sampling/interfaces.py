@@ -15,6 +15,7 @@ __all__ = [
     'BaseEmbedder',
     'BaseClusterer',
     'BaseSemanticSelector',
+    'BaseRuleEnricher',
 ]
 
 
@@ -75,11 +76,23 @@ class BaseSemanticSelector(ABC):
     @abstractmethod
     def select(
         self,
-        dataset_stratum: pd.DataFrame,
-        embeddings: np.ndarray,
-        cluster_labels: np.ndarray,
+        dataset_stratum: "pd.DataFrame",
+        embeddings: "np.ndarray",
+        cluster_labels: "np.ndarray",
         id_column: str,
         center_per_cluster: int,
         outlier_per_cluster: int,
+    ) -> dict:
+        pass
+
+
+class BaseRuleEnricher(ABC):
+    @abstractmethod
+    def enrich(
+        self,
+        dataset_stratum: 'pd.DataFrame',
+        text_column: str,
+        id_column: str,
+        max_per_pattern: int,
     ) -> dict:
         pass
