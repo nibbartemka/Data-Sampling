@@ -12,7 +12,7 @@ class PatternRuleEnricher(BaseRuleEnricher):
         "operation": re.compile(r"\b(операц|оперативн|кесарев|хирургическ)\w*", re.I),
         "hospitalization": re.compile(r"\b(госпитализ|стационар|выписан|поступил|госпитализац)\w*", re.I),
         "infection_comorbidity": re.compile(
-            r"\b(вич|гепатит|туберкул|бактериур|аллерг)\w*",
+            r"\b(вич|гепатит|туберкул|бактериур|аллерг|гипер|аритм|инфаркт)\w*",
             re.I,
         ),
     }
