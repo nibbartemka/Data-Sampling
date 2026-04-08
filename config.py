@@ -35,7 +35,7 @@ class StratificationConfig(BaseModel):
 
 class SamplingLimitsConfig(BaseModel):
     MAX_TOTAL_SAMPLE: int = 300
-    MAX_ROWS_PER_SERVICE: int = 80
+    MAX_ROWS_PER_GROUP: int = 80
 
 
 class RareScorerConfig(BaseModel):
@@ -61,7 +61,7 @@ class ColumnMappingConfig(BaseModel):
         return [
             self.ID_COL,
             self.TEXT_COL,
-            self.STRATIFY_COLS,
+            *self.STRATIFY_COLS,
             *self.EXTRA_COLS
         ]
 
