@@ -13,6 +13,8 @@ __all__ = [
     'BaseTextProcessor',
     'BaseStratifier',
     'BaseEmbedder',
+    'BaseClusterer',
+    'BaseSemanticSelector',
 ]
 
 
@@ -66,4 +68,18 @@ class BaseClusterer(ABC):
         embeddings: 'np.ndarray',
         default_k: int
     ) -> 'np.ndarray':
+        pass
+
+
+class BaseSemanticSelector(ABC):
+    @abstractmethod
+    def select(
+        self,
+        dataset_stratum: pd.DataFrame,
+        embeddings: np.ndarray,
+        cluster_labels: np.ndarray,
+        id_column: str,
+        center_per_cluster: int,
+        outlier_per_cluster: int,
+    ) -> dict:
         pass
