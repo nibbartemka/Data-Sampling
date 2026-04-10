@@ -30,17 +30,11 @@ class ClusteringConfig(BaseModel):
 class StratificationConfig(BaseModel):
     MAX_ROWS_PER_STRATUM: int = 30
     TARGETED_MAX_PER_PATTERN_PER_STRATUM: int = 2
-    RARE_CASES_MAX_PER_STRATUM: int = 3
 
 
 class SamplingLimitsConfig(BaseModel):
     MAX_TOTAL_SAMPLE: int = 300
     MAX_ROWS_PER_GROUP: int = 80
-
-
-class RareScorerConfig(BaseModel):
-    RARE_TERM_MIN_FREQ: int = 2
-    RARE_TERM_MAX_FREQ_RATIO: float = 0.03
 
 
 class ColumnMappingConfig(BaseModel):
@@ -73,7 +67,6 @@ class Settings(BaseSettings):
     EMBEDDING: EmbeddingConfig = Field(default_factory=EmbeddingConfig)
     CLUSTERING: ClusteringConfig = Field(default_factory=ClusteringConfig)
     STRATIFY: StratificationConfig = Field(default_factory=StratificationConfig)
-    RARE_SCORER: RareScorerConfig = Field(default_factory=RareScorerConfig)
     SAMPLING: SamplingLimitsConfig = Field(default_factory=SamplingLimitsConfig)
 
 
