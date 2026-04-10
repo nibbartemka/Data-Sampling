@@ -50,7 +50,7 @@ class SimpleSemanticSelector(BaseSemanticSelector):
         if rid not in records:
             record = row.to_dict()
             record["selection_reasons"] = reason
-            record["selection_score"] = float(score)
+            record["semantic_selection_score"] = float(score)
             records[rid] = record
             return
 
@@ -58,4 +58,4 @@ class SimpleSemanticSelector(BaseSemanticSelector):
         reasons = set(str(existing["selection_reasons"]).split("; "))
         reasons.add(reason)
         existing["selection_reasons"] = "; ".join(sorted(r for r in reasons if r))
-        existing["selection_score"] = max(float(existing["selection_score"]), float(score))
+        existing["semantic_selection_score"] = max(float(existing["semantic_selection_score"]), float(score))

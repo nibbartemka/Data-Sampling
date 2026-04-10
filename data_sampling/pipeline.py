@@ -93,8 +93,8 @@ class Pipeline:
 
             merged["stratum_key"] = stratum_key
             merged = merged.sort_values(
-                "selection_score",
-                ascending=False,
+                by=['semantic_selection_score', 'rule_selection_score'],
+                ascending=[False, False],
             ).head(settings.STRATIFY.MAX_ROWS_PER_STRATUM)
 
             parts.append(merged)
@@ -125,8 +125,8 @@ class Pipeline:
         )
 
         result = result.sort_values(
-            by=["reason_count", "selection_score"],
-            ascending=[False, False],
+            by=["reason_count", 'semantic_selection_score', 'rule_selection_score'],
+            ascending=[False, False, False],
         ).head(settings.SAMPLING.MAX_TOTAL_SAMPLE).copy()
 
         result = result.drop(columns=["reason_count"], errors="ignore").reset_index(drop=True)

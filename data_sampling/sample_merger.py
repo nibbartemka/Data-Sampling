@@ -18,6 +18,11 @@ class SimpleSampleMerger(BaseSampleMerger):
             for rid, record in d.items():
                 if rid not in merged:
                     merged[rid] = record.copy()
+                    for score_attr in ('semantic_selection_score', 'rule_selection_score'):
+                        merged[rid][score_attr] = max(
+                            float(merged[rid].get(score_attr, 0)),
+                            float(merged[rid].get(score_attr, 0)),
+                        )
                     continue
 
                 existing = merged[rid]
@@ -27,10 +32,12 @@ class SimpleSampleMerger(BaseSampleMerger):
                 existing["selection_reasons"] = "; ".join(
                     sorted(r for r in existing_reasons.union(new_reasons) if r)
                 )
-                existing["selection_score"] = max(
-                    float(existing["selection_score"]),
-                    float(record["selection_score"])
-                )
+
+                for score_attr in ('semantic_selection_score', 'rule_selection_score'):
+                    existing[score_attr] = max(
+                        float(existing.get(score_attr, 0)),
+                        float(record.get(score_attr, 0)),
+                    )
 
         if not merged:
             return pd.DataFrame()
@@ -60,8 +67,8 @@ class SimpleSampleMerger(BaseSampleMerger):
         )
 
         work = work.sort_values(
-            by=["reason_count", "selection_score"],
-            ascending=[False, False]
+            by=["reason_count", 'semantic_selection_score', 'rule_selection_score'],
+            ascending=[False, False, False]
         )
 
         parts = []
@@ -88,8 +95,8 @@ class SimpleSampleMerger(BaseSampleMerger):
         )
 
         work = work.sort_values(
-            by=["reason_count", "selection_score"],
-            ascending=[False, False]
+            by=["reason_count", 'semantic_selection_score', 'rule_selection_score'],
+            ascending=[False, False, False]
         ).reset_index(drop=True)
 
         texts = work[text_column].tolist()
