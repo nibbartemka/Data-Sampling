@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import re
 
 import pandas as pd
 
-from .interfaces import BaseTextProcessor
+from app.services.preprocessing.interfaces import BaseTextProcessor
 
 
 class TextNormalizer(BaseTextProcessor):
@@ -11,21 +13,21 @@ class TextNormalizer(BaseTextProcessor):
         r'\bОИМ\b': 'острый инфаркт миокарда',
         r'\bОНМК\b': 'острое нарушение мозгового кровообращения',
         r'\bЭНМГ\b': 'электронейромиография',
-        r'\bНСР\b': 'Нарушения сердечного ритма'
+        r'\bНСР\b': 'нарушения сердечного ритма',
     }
 
     def process_text(self, text: str) -> str:
         if pd.isna(text):
             return ""
 
-        text = str(text).strip()
-        text = text.replace("\xa0", " ")
-        text = text.replace("ё", "е")
-        text = re.sub(r"\s+", " ", text)
-        text = text.lower()
+        processed = str(text).strip()
+        processed = processed.replace("\xa0", " ")
+        processed = processed.replace("ё", "е")
+        processed = re.sub(r"\s+", " ", processed)
+        processed = processed.lower()
 
         for abbr, full in self.ABBREVIATIONS.items():
-            text = re.sub(abbr, full, text, flags=re.IGNORECASE)
+            processed = re.sub(abbr, full, processed, flags=re.IGNORECASE)
 
-        text = re.sub(r"\s+", " ", text).strip()
-        return text
+        processed = re.sub(r"\s+", " ", processed).strip()
+        return processed
